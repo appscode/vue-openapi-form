@@ -15,6 +15,235 @@
 @import "./../../../node_modules/@appscode/design-system/components/_ac-code-highlight";
 @import "./../../../node_modules/@appscode/design-system/components/_ac-content-layout";
 @import "./../../../node_modules/@appscode/design-system/components/_ac-tabs";
+@import "~@appscode/design-system/components/ui-builder/ui-builder";
 
-// Custom style 
-@import "./form-style.scss";
+// Custom style
+// @import "./form-style.scss";
+
+.ac-nested-elements .nested-header {
+  width: 100%;
+}
+
+.ac-nested-elements:first-child {
+  margin-left: 0;
+}
+
+.vue-schema-form-array {
+  .nested-body {
+    // margin-bottom: 15px;
+    display: flex;
+
+    .form-left-item {
+      margin-right: 10px;
+      width: calc(100% - 92px);
+    }
+  }
+}
+
+.ac-nested-elements .nested-body {
+  padding-left: 0px;
+}
+
+.nested-header {
+  .tabs.ac-tabs {
+    margin-bottom: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease-in-out;
+  }
+
+  &:hover {
+    .tabs.ac-tabs {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.vue-openapi-form {
+  width: 920px;
+  margin: 0 auto;
+}
+
+.ac-single-input {
+  margin-left: 25px;
+  // margin-bottom: 15px !important;
+}
+
+.vue-form-scema-body {
+  .left-content {
+    width: 650px;
+    background-color: #f1f1f1;
+    padding: 30px;
+  }
+
+  .right-content {
+    width: 100%;
+    margin-top: 30px;
+  }
+}
+
+.vue-openapi-form .is-warning {
+  font-size: 12px;
+  color: #ea3d2f;
+  font-family: Roboto, sans-serif;
+  padding-left: 10px;
+}
+
+.v-tooltip-open {
+  background-color: #fff;
+}
+
+.ac-nested-elements::after {
+  top: 25px;
+  width: 1px;
+  height: calc(100% - 50px);
+}
+
+.ac-nested-elements::before {
+  bottom: 15px;
+}
+
+
+// for vue-tooltip
+
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+
+  &.is-button-info {
+    .tooltip-inner {
+      background: $ac-white;
+      color: $ac-primary;
+      border-radius: 4px;
+      padding: 5px 20px 4px;
+      box-shadow: $ac-shadow-1;
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      position: absolute;
+      margin: 5px;
+      border-color: $ac-white;
+    }
+  }
+
+  &.is-errors-tooltip {
+    .tooltip-inner {
+      background: $ac-white;
+      color: $ac-danger;
+      border-radius: 4px;
+      padding: 5px 20px 4px;
+      box-shadow: $ac-shadow-1;
+      font-weight: 500;
+      font-size: 13px;
+
+      .errors-wrapper {
+        .error-element {
+          padding: 5px 0;
+        }
+      }
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      position: absolute;
+      margin: 5px;
+      border-color: $ac-white;
+    }
+  }
+
+  &[x-placement^="top"] {
+    margin-bottom: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 5px 0 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: 5px;
+
+    .tooltip-arrow {
+      border-width: 0 5px 5px 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="right"] {
+    margin-left: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &.popover {
+    $color: #f9f9f9;
+
+    .popover-inner {
+      background: $color;
+      color: black;
+      padding: 24px;
+      border-radius: 4px;
+      box-shadow: $ac-shadow-1;
+    }
+
+    .popover-arrow {
+      border-color: $color;
+    }
+  }
+
+  &[aria-hidden="true"] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.15s, visibility 0.15s;
+  }
+
+  &[aria-hidden="false"] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.15s;
+  }
+}

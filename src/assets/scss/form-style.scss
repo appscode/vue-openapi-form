@@ -12,13 +12,15 @@
     text-align: center;
     line-height: 30px;
     margin-left: 20px;
-    color: $ac-color-text;
-    transition: 0.3s ease-in-out;
+    color: $ac-white;
+    i.fa {
+      transition: 0.3s ease-in-out;
+    }
 
     &:hover {
-      background-color: $ac-primary;
-      color: $ac-white;
-      border: 1px solid $ac-primary;
+      i.fa {
+        transform: scale(1.2);
+      }
     }
   }
 }

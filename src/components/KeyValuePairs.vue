@@ -4,30 +4,27 @@
     :ref="`${schema.title.replace(/ /g, '-')}-observer`"
     :vid="`${schema.title.replace(/ /g, '-')}-observer`"
     v-slot="{ errors: observerErrors }"
-    class="ac-content-layout style-2 pt-20 pr-0 pb-0 pl-30 is-border-none key-value-pairs"
+    class="ac-nested-elements key-value-pairs"
     :class="{ 'stop-line': isLastChild }"
     :key="updatePass"
   >
-    <div class="ac-content-header">
-      <div class="ac-cheader-left is-flex is-align-items-center">
-        <div class="ac-content-title">
-          <h6 class="is-small">
-            {{ schema.title || "Array Item Description"
-            }}<!-- show errors-->
-            <component-errors
-              :errors="[...errors, ...calcObserverError(observerErrors)]"
-            />
-          </h6>
+    <div class="nested-header mb-5">
+      <h6 class="is-flex is-semi-normal">
+        <div class="collaps-icon is-disabled">
+          <i aria-hidden="true" class="fa fa-minus"></i>
         </div>
-      </div>
-      <div class="ac-cheader-right">
-        <tabs v-model="activeTab" />
-      </div>
+        {{ schema.title || "Array Item Description"
+        }}<!-- show errors-->
+        <component-errors
+          :errors="[...errors, ...calcObserverError(observerErrors)]"
+        />
+      </h6>
+      <tabs v-model="activeTab" />
     </div>
     <!-- existing key values -->
-    <div class="ac-key-value-pairs-wrapper" v-show="activeTab === 'form'">
+    <template v-if="activeTab === 'form'">
       <div
-        class="ac-key-value-pairs"
+        class="mb-15"
         v-for="(prop, index) in keyValueArray"
         :key="`${index}-${schema.title}-form`"
       >
@@ -38,20 +35,6 @@
           :schema="schema"
           :additionalProperties="additionalProperties"
         />
-
-        <div class="ac-is-1">
-          <div class="buttons">
-            <button
-              class="button ac-button is-square is-danger is-normal"
-              :class="{ 'is-small': !isMedium }"
-              @click.prevent="deleteProp(index)"
-            >
-              <span class="icon is-small">
-                <i class="fa fa-trash"></i>
-              </span>
-            </button>
-          </div>
-        </div>
       </div>
       <!-- key input -->
       <validation-observer
@@ -59,124 +42,114 @@
         :vid="`${schema.title.replace(/ /g, '-')}-new-observer`"
         :disabled="true"
         tag="div"
-        class="ac-key-value-pairs"
+        class="key-value-save"
       >
-        <div class="ac-is-3">
+        <validation-provider
+          :vid="`${schema.title.replace(/ /g, '-')}-key-provider`"
+          rules="required"
+          :name="`${schema.title.replace(/ /g, '-')}-key`"
+          v-slot="validationOb"
+          tag="div"
+        >
+          <simple-input
+            :schema="{
+              title: 'Key',
+              type: 'string',
+              ui: { tag: 'input', type: 'text' },
+            }"
+            :type="`string`"
+            :validationOb="validationOb"
+            v-model="newKey"
+            :reference-model="''"
+          />
+        </validation-provider>
+
+        <!-- new value input -->
+        <!-- if value is object -->
+        <template v-if="additionalProperties.type === 'object'">
           <validation-provider
-            :vid="`${schema.title.replace(/ /g, '-')}-key-provider`"
+            v-slot="{ errors }"
             rules="required"
-            :name="`${schema.title.replace(/ /g, '-')}-key`"
+            :name="`${schema.title.replace(/ /g, '-')}-value`"
+            :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
+            slim
+          >
+            <object-form-wrapper
+              :is-last-child="true"
+              :isSelfRequired="true"
+              :schema="additionalProperties"
+              :type="additionalProperties.type"
+              :errors="errors"
+              v-model="newValue"
+              :reference-model="{}"
+            />
+          </validation-provider>
+        </template>
+        <!-- if value is key value pairs -->
+        <template v-else-if="additionalProperties.type === 'key-value-pairs'">
+          <validation-provider
+            v-slot="{ errors }"
+            rules="required"
+            :name="`${schema.title.replace(/ /g, '-')}-value`"
+            :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
+            slim
+          >
+            <key-value-pairs
+              :is-last-child="true"
+              :schema="additionalProperties"
+              :type="additionalProperties.type"
+              :errors="errors"
+              v-model="newValue"
+              :reference-model="{}"
+            />
+          </validation-provider>
+        </template>
+        <!-- if value is array -->
+        <template v-else-if="additionalProperties.type === 'array'">
+          <validation-provider
+            v-slot="{ errors }"
+            rules="required"
+            :name="`${schema.title.replace(/ /g, '-')}-value`"
+            :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
+            slim
+          >
+            <array-input
+              :is-last-child="true"
+              :schema="additionalProperties"
+              :type="additionalProperties.type"
+              :errors="errors"
+              v-model="newValue"
+              :reference-model="[]"
+            />
+          </validation-provider>
+        </template>
+        <!-- if value is simple input -->
+        <template v-else>
+          <validation-provider
             v-slot="validationOb"
-            tag="div"
-            class="control has-icons-right"
+            rules="required"
+            :name="`${schema.title.replace(/ /g, '-')}-value`"
+            :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
+            slim
           >
             <simple-input
-              :schema="{
-                title: 'Key',
-                type: 'string',
-                ui: { tag: 'input', type: 'text' },
-              }"
-              :type="`string`"
+              :schema="additionalProperties"
+              :type="additionalProperties.type"
               :validationOb="validationOb"
-              v-model="newKey"
+              v-model="newValue"
               :reference-model="''"
             />
           </validation-provider>
-        </div>
-
-        <!-- new value input -->
-
-        <div class="ac-is-8">
-          <!-- if value is object -->
-          <template v-if="additionalProperties.type === 'object'">
-            <validation-provider
-              v-slot="{ errors }"
-              rules="required"
-              :name="`${schema.title.replace(/ /g, '-')}-value`"
-              :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
-              slim
-            >
-              <object-form-wrapper
-                :is-last-child="true"
-                :isSelfRequired="true"
-                :schema="additionalProperties"
-                :type="additionalProperties.type"
-                :errors="errors"
-                v-model="newValue"
-                :reference-model="{}"
-              />
-            </validation-provider>
-          </template>
-          <!-- if value is key value pairs -->
-          <template v-else-if="additionalProperties.type === 'key-value-pairs'">
-            <validation-provider
-              v-slot="{ errors }"
-              rules="required"
-              :name="`${schema.title.replace(/ /g, '-')}-value`"
-              :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
-              slim
-            >
-              <key-value-pairs
-                :is-last-child="true"
-                :schema="additionalProperties"
-                :type="additionalProperties.type"
-                :errors="errors"
-                v-model="newValue"
-                :reference-model="{}"
-              />
-            </validation-provider>
-          </template>
-          <!-- if value is array -->
-          <template v-else-if="additionalProperties.type === 'array'">
-            <validation-provider
-              v-slot="{ errors }"
-              rules="required"
-              :name="`${schema.title.replace(/ /g, '-')}-value`"
-              :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
-              slim
-            >
-              <array-input
-                :is-last-child="true"
-                :schema="additionalProperties"
-                :type="additionalProperties.type"
-                :errors="errors"
-                v-model="newValue"
-                :reference-model="[]"
-              />
-            </validation-provider>
-          </template>
-          <!-- if value is simple input -->
-          <template v-else>
-            <validation-provider
-              v-slot="validationOb"
-              rules="required"
-              :name="`${schema.title.replace(/ /g, '-')}-value`"
-              :vid="`${schema.title.replace(/ /g, '-')}-value-provider`"
-              slim
-            >
-              <simple-input
-                :schema="additionalProperties"
-                :type="additionalProperties.type"
-                :validationOb="validationOb"
-                v-model="newValue"
-                :reference-model="''"
-              />
-            </validation-provider>
-          </template>
-        </div>
-        <div class="ac-is-1">
-          <div class="buttons">
-            <button
-              class="button ac-button is-square is-primary is-normal"
-              :class="{ 'is-small': !isMedium }"
-              @click.prevent="addProp()"
-            >
-              <i class="fa fa-plus"></i>
-            </button>
-          </div>
-        </div>
+        </template>
+        <button
+          class="button ac-button is-small is-square is-outlined-gray is-transparent"
+          :class="{ 'is-small': !isMedium }"
+          @click.prevent="addProp()"
+        >
+          <i class="fa fa-plus"></i>
+        </button>
       </validation-observer>
-    </div>
+    </template>
     <!-- declared in tabs component -->
     <yaml-form
       v-if="activeTab === 'yaml'"

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="ac-navbar-area is-not-fixed mb-30" id="header">
+    <div class="ac-navbar-area is-fixed" id="header">
       <div class="ac-navbar-inner">
         <!-- navbar start  -->
         <nav class="ac-navbar">
@@ -9,7 +9,7 @@
             <a href="https://byte.builders/"
               ><img
                 class="desktop-only"
-                src="https://cdn.appscode.com/images/products/bytebuilders/bytebuilders.png"
+                src="@/assets/images/bytebuilders-logo-white.svg"
               />
 
               <img
@@ -20,7 +20,7 @@
             </a>
           </div>
           <!-- navbar logo end -->
-          <p class="pl-20">(Vue OpenAPI Form)</p>
+          <p class="pl-20" style="color: white">(Vue OpenAPI Form)</p>
           <!-- navbar menus start  -->
           <div class="ac-navbar-menu">
             <!-- single navbar menu item start  -->
@@ -42,57 +42,50 @@
       </div>
     </div>
 
-    <div class="vue-form-scema-body mb-50">
-      <div class="container is-fluid">
-        <div class="columns is-multiline">
-          <div class="column is-4">
-            <div class="left-content-wrapper">
-              <div class="select-box-wrapper" v-if="!modifiedSchema">
-                <label for="schema-selection">Select Schema</label>
-                <div class="select is-fullwidth">
-                  <select id="schema-selection" v-model="selectedJsonSchema">
-                    <option
-                      v-for="jsonSchema in jsonSchemas"
-                      :key="jsonSchema.title"
-                      :value="jsonSchema"
-                    >
-                      {{ jsonSchema.title }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="level" v-else>
-                <div class="level-left">Schema has been modified</div>
-                <div class="level-right">
-                  <button
-                    class="button is-warning"
-                    @click.prevent="resetForm()"
+    <div class="vue-form-scema-body mb-50 mt-50">
+      <div class="is-flex">
+        <div class="left-content">
+          <div class="left-content-wrapper">
+            <div class="select-box-wrapper" v-if="!modifiedSchema">
+              <label class="mb-10 is-block" for="schema-selection"
+                >Select Schema</label
+              >
+              <div class="select is-fullwidth">
+                <select id="schema-selection" v-model="selectedJsonSchema">
+                  <option
+                    v-for="jsonSchema in jsonSchemas"
+                    :key="jsonSchema.title"
+                    :value="jsonSchema"
                   >
-                    Reset
-                  </button>
-                </div>
+                    {{ jsonSchema.title }}
+                  </option>
+                </select>
               </div>
-              <schema-model
-                :key="JSON.stringify(selectedJsonSchema)"
-                :schemaModel="selectedJsonSchema"
-                @submit="updateSchema"
-              />
             </div>
-          </div>
-          <div class="column is-8">
-            <div class="container">
-              <!-- use /size="medium"/ for medium size input  -->
-              <!-- key is required to properly update the new form when schema changes -->
-              <vue-openapi-form
-                :schema="jsonSchema"
-                v-model="model"
-                :reference-model="referenceModel || ''"
-                :formTitle="formTitle"
-                :key="JSON.stringify(selectedJsonSchema)"
-                :onValid="onValid"
-              />
+            <div class="level" v-else>
+              <div class="level-left">Schema has been modified</div>
+              <div class="level-right">
+                <button class="button is-warning" @click.prevent="resetForm()">
+                  Reset
+                </button>
+              </div>
             </div>
+            <schema-model
+              :key="JSON.stringify(selectedJsonSchema)"
+              :schemaModel="selectedJsonSchema"
+              @submit="updateSchema"
+            />
           </div>
+        </div>
+        <div class="right-content">
+          <vue-openapi-form
+            :schema="jsonSchema"
+            v-model="model"
+            :reference-model="referenceModel || ''"
+            :formTitle="formTitle"
+            :key="JSON.stringify(selectedJsonSchema)"
+            :onValid="onValid"
+          />
         </div>
       </div>
     </div>

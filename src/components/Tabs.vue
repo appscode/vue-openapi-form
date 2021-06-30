@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs is-toggle ac-toggle-buttons mb-0">
+  <div class="tabs ac-tabs is-line">
     <ul>
       <li :class="{ 'is-active': activeTab === 'form' }">
         <a @click.prevent="showForm()">

@@ -1,5 +1,5 @@
 <template>
-  <div class="form-left-item">
+  <div class="form-left-item mb-15">
     <template v-if="items.type === 'object'">
       <validation-provider
         v-slot="{ errors }"

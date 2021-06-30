@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="ml-30">
     <!-- tabs start  -->
-    <div class="tabs ac-tabs is-boxed mt-10 mb-0">
+    <div class="tabs ac-tabs is-line">
       <ul>
         <li :class="{ 'is-active': activeTab === 'file' }">
           <a @click.prevent="activeTab = 'file'">

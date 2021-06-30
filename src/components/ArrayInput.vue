@@ -4,29 +4,26 @@
     :ref="`${schema.title.replace(/ /g, '-')}-observer`"
     :vid="`${schema.title.replace(/ /g, '-')}-observer`"
     v-slot="{ errors: observerErrors }"
-    class="vue-schema-form-array pt-20 pr-0 pb-0 pl-30 array-input"
+    class="ac-nested-elements vue-schema-form-array array-input"
     :class="{ 'stop-line': isLastChild }"
     :key="updatePass"
   >
-    <div class="ac-content-header">
-      <div class="ac-cheader-left is-flex is-align-items-center">
-        <div class="ac-content-title">
-          <h6 class="is-small">
-            {{ schema.title || "Array Item Description" }}
-            <component-errors
-              :errors="[...errors, ...calcObserverError(observerErrors)]"
-            />
-          </h6>
+    <div class="nested-header mb-5">
+      <h6 class="is-flex is-semi-normal">
+        <div class="collaps-icon is-disabled">
+          <i class="fa fa-minus"></i>
         </div>
-      </div>
-      <div class="ac-cheader-right">
-        <tabs v-model="activeTab" />
-      </div>
+        {{ schema.title || "Array Item Description" }}
+        <component-errors
+          :errors="[...errors, ...calcObserverError(observerErrors)]"
+        />
+      </h6>
+      <tabs v-model="activeTab" />
     </div>
     <div v-show="activeTab === 'form'">
       <!-- existing values form -->
       <div
-        class="form-container is-flex is-justify-content-space-between"
+        class="nested-body"
         :key="`${index}-${schema.title}-form`"
         v-for="(item, index) in modelData"
       >
@@ -39,7 +36,7 @@
           :reference-model="referenceModel || []"
         />
         <!-- for each item add control buttons -->
-        <div class="form-right-item mt-20">
+        <div class="form-right-item">
           <div class="buttons">
             <div class="up-down-buttons" :class="{ 'is-small': !isMedium }">
               <button
@@ -76,7 +73,7 @@
               </button>
             </div>
             <button
-              class="button ac-button is-square is-danger is-normal mb-0"
+              class="button ac-button is-small is-square is-outlined-gray is-transparent mb-0"
               :class="{ 'is-small': !isMedium }"
               @click.prevent="deleteValue(index)"
             >
@@ -93,107 +90,99 @@
         :disabled="true"
         slim
       >
-        <div
-          class="single-input-and-single-button is-flex is-justify-content-space-between"
-        >
-          <div class="form-left-item">
-            <template v-if="items.type === 'object'">
-              <validation-provider
-                v-slot="{ errors }"
-                :rules="ruleObject(true)"
-                :name="`${schema.title.replace(/ /g, '-')}-new-value`"
-                :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
-                slim
-              >
-                <object-form-wrapper
-                  :is-last-child="true"
-                  :isSelfRequired="true"
-                  :schema="{
-                    ...items,
-                    ...{ title: `${schema.title} new value` },
-                  }"
-                  :type="items.type"
-                  :errors="errors"
-                  v-model="newData"
-                  :reference-model="{}"
-                />
-              </validation-provider>
-            </template>
-            <template v-else-if="items.type === 'key-value-pairs'">
-              <validation-provider
-                v-slot="{ errors }"
-                :rules="ruleObject(true)"
-                :name="`${schema.title.replace(/ /g, '-')}-new-value`"
-                :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
-                slim
-              >
-                <key-value-pairs
-                  :is-last-child="true"
-                  :schema="{
-                    ...items,
-                    ...{ title: `${schema.title} new value` },
-                  }"
-                  :errors="errors"
-                  :type="items.type"
-                  v-model="newData"
-                  :reference-model="{}"
-                />
-              </validation-provider>
-            </template>
-            <template v-else-if="items.type === 'array'">
-              <validation-provider
-                v-slot="{ errors }"
-                :rules="ruleArray(true)"
-                :name="`${schema.title.replace(/ /g, '-')}-new-value`"
-                :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
-                slim
-              >
-                <array-input
-                  :is-last-child="true"
-                  :schema="{
-                    ...items,
-                    ...{ title: `${schema.title} new value` },
-                  }"
-                  :errors="errors"
-                  :type="items.type"
-                  v-model="newData"
-                  :reference-model="[]"
-                />
-              </validation-provider>
-            </template>
-            <template v-else>
-              <validation-provider
-                v-slot="validationOb"
-                :rules="ruleString(true)"
-                :name="`${schema.title.replace(/ /g, '-')}-new-value`"
-                :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
-                slim
-              >
-                <simple-input
-                  :schema="{
-                    ...items,
-                    ...{ title: `${schema.title} new value` },
-                  }"
-                  :required="true"
-                  :type="items.type"
-                  :validationOb="validationOb"
-                  v-model="newData"
-                  :reference-model="''"
-                />
-              </validation-provider>
-            </template>
-          </div>
-          <div class="form-right-item mt-20">
-            <div class="buttons">
-              <button
-                class="button ac-button is-square is-primary is-normal"
-                :class="{ 'is-small': !isMedium }"
-                @click.prevent="addNewValue()"
-              >
-                <i class="fa fa-plus"></i>
-              </button>
-            </div>
-          </div>
+        <div class="value-list-save">
+          <template v-if="items.type === 'object'">
+            <validation-provider
+              v-slot="{ errors }"
+              :rules="ruleObject(true)"
+              :name="`${schema.title.replace(/ /g, '-')}-new-value`"
+              :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
+              slim
+            >
+              <object-form-wrapper
+                :is-last-child="true"
+                :isSelfRequired="true"
+                :schema="{
+                  ...items,
+                  ...{ title: `${schema.title} new value` },
+                }"
+                :type="items.type"
+                :errors="errors"
+                v-model="newData"
+                :reference-model="{}"
+              />
+            </validation-provider>
+          </template>
+          <template v-else-if="items.type === 'key-value-pairs'">
+            <validation-provider
+              v-slot="{ errors }"
+              :rules="ruleObject(true)"
+              :name="`${schema.title.replace(/ /g, '-')}-new-value`"
+              :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
+              slim
+            >
+              <key-value-pairs
+                :is-last-child="true"
+                :schema="{
+                  ...items,
+                  ...{ title: `${schema.title} new value` },
+                }"
+                :errors="errors"
+                :type="items.type"
+                v-model="newData"
+                :reference-model="{}"
+              />
+            </validation-provider>
+          </template>
+          <template v-else-if="items.type === 'array'">
+            <validation-provider
+              v-slot="{ errors }"
+              :rules="ruleArray(true)"
+              :name="`${schema.title.replace(/ /g, '-')}-new-value`"
+              :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
+              slim
+            >
+              <array-input
+                :is-last-child="true"
+                :schema="{
+                  ...items,
+                  ...{ title: `${schema.title} new value` },
+                }"
+                :errors="errors"
+                :type="items.type"
+                v-model="newData"
+                :reference-model="[]"
+              />
+            </validation-provider>
+          </template>
+          <template v-else>
+            <validation-provider
+              v-slot="validationOb"
+              :rules="ruleString(true)"
+              :name="`${schema.title.replace(/ /g, '-')}-new-value`"
+              :vid="`${schema.title.replace(/ /g, '-')}-new-value-provider`"
+              slim
+            >
+              <simple-input
+                :schema="{
+                  ...items,
+                  ...{ title: `${schema.title} new value` },
+                }"
+                :required="true"
+                :type="items.type"
+                :validationOb="validationOb"
+                v-model="newData"
+                :reference-model="''"
+              />
+            </validation-provider>
+          </template>
+          <button
+            class="button ac-button is-small is-square is-outlined-gray is-transparent"
+            :class="{ 'is-small': !isMedium }"
+            @click.prevent="addNewValue()"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
         </div>
       </validation-observer>
     </div>

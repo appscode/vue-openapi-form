@@ -1,11 +1,11 @@
 <template>
   <div>
-    <span class="icon is-small is-right is-success" v-if="valid">
+    <button class="button is-information is-success" v-if="valid">
       <i class="fa fa-check"></i>
-    </span>
-    <span class="icon is-small is-right is-warning" v-if="invalid">
+    </button>
+    <button class="button is-information is-warning" v-if="invalid">
       <i class="fa fa-times"></i>
-    </span>
+    </button>
   </div>
 </template>
 

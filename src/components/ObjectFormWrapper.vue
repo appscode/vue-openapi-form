@@ -4,48 +4,39 @@
     :ref="`${schema.title.replace(/ /g, '-')}-observer`"
     :vid="`${schema.title.replace(/ /g, '-')}-observer`"
     v-slot="{ errors: observerErrors }"
-    class="ac-content-layout style-2 pt-20 pr-0 pb-0 pl-30 is-border-none object-form-wrapper"
+    class="ac-nested-elements object-form-wrapper"
     :class="{ 'stop-line': isLastChild, 'hide-upper-line': isRoot }"
   >
     <!-- {{ calcObserverError(observerErrors) }} -->
-    <div class="ac-content-header">
-      <div class="ac-cheader-left is-flex is-align-items-center">
-        <div class="ac-collaps-button">
-          <div v-if="!isRoot" class="collaps-button">
-            <div
-              class="button-circle"
-              :disabled="activeTab !== 'form'"
-              @click.prevent="toggleFold()"
-            >
-              <i
-                :class="['fa', isFolded ? 'fa-plus' : 'fa-minus']"
-                aria-hidden="true"
-              ></i>
-            </div>
-          </div>
-        </div>
-        <div class="ac-content-title">
-          <h6 :class="{ 'is-small': !isRoot }">
-            {{ schema.title || "Array Item Description" }}
-            <!-- show errors-->
-            <component-errors
-              :errors="[...errors, ...calcObserverError(observerErrors)]"
-            />
-          </h6>
-        </div>
-      </div>
-      <div class="ac-cheader-right is-root-done-button">
-        <tabs v-if="!onlyJson" v-model="activeTab" />
-
-        <button
-          v-if="isRoot"
-          class="done-button button ac-button is-primary is-pulled-right"
-          :class="{ 'is-loading': isFormSubmitting }"
-          @click.prevent="submit()"
+    <div class="nested-header mb-5">
+      <h6 class="is-flex is-semi-normal">
+        <div
+          v-if="!isRoot"
+          class="collaps-icon"
+          :disabled="activeTab !== 'form'"
+          @click.prevent="toggleFold()"
         >
-          <span>DONE</span>
-        </button>
-      </div>
+          <i
+            :class="['fa', isFolded ? 'fa-plus' : 'fa-minus']"
+            aria-hidden="true"
+          ></i>
+        </div>
+        {{ schema.title || "Array Item Description" }}
+        <!-- show errors-->
+        <component-errors
+          :errors="[...errors, ...calcObserverError(observerErrors)]"
+        />
+      </h6>
+      <tabs v-if="!onlyJson" v-model="activeTab" />
+      <!-- 
+          <button
+            v-if="isRoot"
+            class="done-button button ac-button is-primary is-pulled-right"
+            :class="{ 'is-loading': isFormSubmitting }"
+            @click.prevent="submit()"
+          >
+            <span>DONE</span>
+          </button> -->
     </div>
     <!-- form for all the object's properties -->
     <object-form
